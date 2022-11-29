@@ -9,7 +9,8 @@ import { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
-export default function MapScreen() {
+export default function MapScreen({ restaurants }) {
+  console.log("restaurants (nbre) -> ", restaurants.length);
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [coords, setCoords] = useState();
@@ -45,8 +46,6 @@ export default function MapScreen() {
     <Text>Permission refusée</Text>
   ) : (
     <View style={styles.container}>
-      <Text>MAP SCREEN !!!</Text>
-      <Text></Text>
       <View>
         <MapView
           style={styles.map}
@@ -54,11 +53,28 @@ export default function MapScreen() {
           initialRegion={{
             latitude: coords.latitude,
             longitude: coords.longitude,
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.02,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1,
           }}
           showsUserLocation={true}
-        ></MapView>
+        >
+          {restaurants.map((restaurant) => {
+            // console.log("bcl -> ", index);
+
+            return (
+              <Marker
+                key={restaurant.placeId}
+                coordinate={{
+                  latitude: restaurant.location.lat,
+                  longitude: restaurant.location.lng,
+                }}
+                title={restaurant.name}
+                description={restaurant.description}
+                // image={<AntDesign name="flag" size={24} color="black" />}
+              />
+            );
+          })}
+        </MapView>
       </View>
     </View>
   );
@@ -67,14 +83,14 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    // backgroundColor: "#fff",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
   map: {
-    width: Dimensions.get("window").width,
+    // width: Dimensions.get("window").width,
 
     height: 300,
-    // width: 400,
+    width: 400,
   },
 });
