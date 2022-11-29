@@ -10,9 +10,15 @@ import {
 } from "react-native";
 
 import { useState } from "react";
+import Constants from "expo-constants";
+
+// Composants
 import MapScreen from "../components/MapScreen";
+
 export default function RestaurantsScreen({ restaurants }) {
   // console.log("Restaurants -> ", restaurants.length);
+
+  const [searchText, setSearchText] = useState("");
 
   const renderItem = ({ item }) => {
     return (
@@ -50,20 +56,19 @@ export default function RestaurantsScreen({ restaurants }) {
 
   return (
     <View>
+      <TextInput
+        style={styles.input}
+        onChangeText={(text) => setSearchText(text)}
+        value={searchText}
+        placeholder="Que cherchez-vous ?"
+      ></TextInput>
       <MapScreen restaurants={restaurants} />
       <View style={styles.container}>
-        <Text>This is the HomeScreen component</Text>
-        {/* <TextInput
-          style={styles.input}
-          onChangeText={(text) => setSearchText(text)}
-          value={searchText}
-          placeholder="Que cherchez-vous ?"
-        ></TextInput> */}
         <FlatList
           data={restaurants}
           keyExtractor={(item) => String(item.placeId)}
           renderItem={renderItem}
-          scrollEnabled={true}
+          style={styles.flatlist}
         />
 
         {/* {restaurants.map((restaurant) => {
@@ -124,7 +129,8 @@ const styles = StyleSheet.create({
     height: 100,
     width: Dimensions.get("window").width,
     flexDirection: "row",
-    margin: 5,
+    marginTop: 5,
+    marginBottom: 5,
   },
 
   thumbnailContainer: {
@@ -171,5 +177,18 @@ const styles = StyleSheet.create({
     width: 100,
     alignItems: "flex-end",
     paddingRight: 10,
+  },
+
+  flatlist: {
+    height:
+      Dimensions.get("window").height - 300 - Constants.statusBarHeight - 40,
+  },
+  input: {
+    borderColor: "#ffbac0",
+    borderWidth: 1,
+    height: 40,
+    width: 200,
+    borderRadius: 10,
+    backgroundColor: "white",
   },
 });

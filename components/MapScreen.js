@@ -53,8 +53,8 @@ export default function MapScreen({ restaurants }) {
           initialRegion={{
             latitude: coords.latitude,
             longitude: coords.longitude,
-            latitudeDelta: 0.1,
-            longitudeDelta: 0.1,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
           }}
           showsUserLocation={true}
         >
