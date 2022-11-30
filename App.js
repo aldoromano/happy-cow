@@ -67,7 +67,7 @@ export default function App() {
           </>
         ) : (
           <Stack.Screen name="Home">
-            {() => <RestaurantsScreen restaurants={restaurants.slice(0, 10)} />}
+            {() => <RestaurantsScreen restaurants={restaurants.slice(0, 20)} />}
           </Stack.Screen>
         )}
       </Stack.Navigator>

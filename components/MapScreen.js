@@ -53,13 +53,13 @@ export default function MapScreen({ restaurants }) {
           initialRegion={{
             latitude: coords.latitude,
             longitude: coords.longitude,
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.02,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
           }}
           showsUserLocation={true}
         >
-          {restaurants.map((restaurant) => {
-            // console.log("bcl -> ", index);
+          {restaurants.map((restaurant, index) => {
+            console.log("bcl -> ", index);
 
             return (
               <Marker
