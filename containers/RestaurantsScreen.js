@@ -22,6 +22,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 // Composants
 import MapScreen from "../components/MapScreen";
+import getStars from "../components/Stars";
 
 export default function RestaurantsScreen({ restaurants }) {
   //console.log("Restaurants -> ", restaurants.length);
@@ -39,7 +40,7 @@ export default function RestaurantsScreen({ restaurants }) {
   const [coords, setCoords] = useState();
 
   // Maximum de restaurants par page
-  const MAXROWPAGES = 5;
+  const MAXROWPAGES = 20;
 
   /*
    * Rendu de l'affichage des restaurants
@@ -51,7 +52,22 @@ export default function RestaurantsScreen({ restaurants }) {
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() =>
-              navigation.navigate("Restaurant", { id: item.placeId })
+              navigation.navigate("Restaurant", {
+                id: item.placeId,
+                distance:
+                  (
+                    getDistance(
+                      {
+                        latitude: coords.latitude,
+                        longitude: coords.longitude,
+                      },
+                      {
+                        latitude: item.location.lat,
+                        longitude: item.location.lng,
+                      }
+                    ) / 1000
+                  ).toFixed(2) + " Km",
+              })
             }
           >
             <Image
@@ -65,6 +81,7 @@ export default function RestaurantsScreen({ restaurants }) {
             <View style={styles.textContainer}>
               <Text style={styles.textRestaurant}>{item.name}</Text>
               <Text style={styles.defaultText}>{item.address}</Text>
+              <Text>{getStars(item.rating)}</Text>
             </View>
             <View style={styles.additionalInformationContainer}>
               <Text style={styles.defaultText}>{item.price}</Text>
@@ -390,13 +407,14 @@ const styles = StyleSheet.create({
   },
 
   textContainer: {
-    width: Dimensions.get("window").width - 220,
+    width: Dimensions.get("window").width - 200,
     borderColor: "black",
     borderWidth: 1,
   },
 
   textRestaurant: {
     fontWeight: "bold",
+    fontSize: 12,
   },
 
   defaultText: {
@@ -405,7 +423,7 @@ const styles = StyleSheet.create({
   },
 
   additionalInformationContainer: {
-    width: 100,
+    width: 80,
     alignItems: "flex-end",
     paddingRight: 10,
   },

@@ -106,7 +106,7 @@ export default function App() {
                       >
                         {() => (
                           <RestaurantsScreen
-                            restaurants={restaurants.slice(0, 20)}
+                            restaurants={restaurants.slice(0, 100)}
                           />
                         )}
                       </Stack.Screen>

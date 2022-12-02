@@ -7,17 +7,38 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import restaurants from "../assets/restaurants.json";
 import Constants from "expo-constants";
-// import { useNavigation } from "@react-navigation/core";
+import { FontAwesome } from "@expo/vector-icons";
+
+import * as Location from "expo-location";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+
+import MapScreen from "../components/MapScreen";
+import getStars from "../components/Stars";
 
 export default function RestaurantScreen() {
   const { params } = useRoute();
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const restaurant = restaurants.filter((elem) => elem.placeId === params.id);
-  // console.log("placeId -> ", params.id, " / ", restaurant[0].thumbnail);
+
+  // const getStars = (rating) => {
+  //   const num = Math.floor(rating);
+  //   const dec = rating - num;
+  //   let tab = [];
+
+  //   for (let i = 0; i < num; i++) {
+  //     tab.push(<FontAwesome name="star" size={15} color="orange" />);
+  //   }
+  //   if (dec) {
+  //     tab.push(<FontAwesome name="star-half-full" size={15} color="orange" />);
+  //   }
+
+  //   return tab;
+  // };
+  // console.log("placeId -> ", params.id, " / ", params.distance);
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -38,9 +59,9 @@ export default function RestaurantScreen() {
               <View style={styles.restaurantOtherImage2Container}>
                 <TouchableOpacity
                   onPress={() => {
-                    // navigation.navigate("Carrousel", {
-                    //   pictures: restaurant[0].pictures,
-                    // });
+                    navigation.navigate("Carrousel", {
+                      pictures: restaurant[0].pictures,
+                    });
                   }}
                 >
                   <Image
@@ -66,13 +87,31 @@ export default function RestaurantScreen() {
               </View>
             </View>
           </View>
-          <View style={styles.nameContainer}>
-            <Text style={styles.whiteText}>{restaurant[0].name}</Text>
+          <View style={styles.textContainer}>
+            <View style={styles.nameContainer}>
+              <Text style={styles.whiteText}>{restaurant[0].name}</Text>
+            </View>
+            <View>
+              <Text style={styles.whiteText}>{restaurant[0].type}</Text>
+            </View>
+          </View>
+
+          <View style={styles.textContainer}>
+            <View style={styles.nameContainer}>
+              <Text style={styles.whiteText}>
+                {getStars(restaurant[0].rating)}
+              </Text>
+            </View>
+            <View>
+              <Text style={styles.whiteText}>{params.distance}</Text>
+            </View>
           </View>
           {/* <Text>Truc</Text> */}
         </View>
         <View style={styles.mediumContainer}></View>
-        <View style={styles.mapContainer}></View>
+        <View style={styles.mapContainer}>
+          <MapScreen restaurants={restaurant}></MapScreen>
+        </View>
       </ScrollView>
     </View>
   );
@@ -91,7 +130,7 @@ const styles = StyleSheet.create({
     height:
       (Dimensions.get("window").height - Constants.statusBarHeight - 49) / 3,
     width: Dimensions.get("window").width,
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "center",
   },
 
@@ -137,11 +176,14 @@ const styles = StyleSheet.create({
     color: "white",
   },
 
-  nameContainer: { justifyContent: "flex-startcd" },
+  nameContainer: { justifyContent: "flex-start" },
+
   whiteText: {
     color: "white",
     fontSize: 12,
   },
+
+  textContainer: { flexDirection: "row", justifyContent: "space-between" },
   mediumContainer: {
     backgroundColor: "red",
     width: Dimensions.get("window").width,

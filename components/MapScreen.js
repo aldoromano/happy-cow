@@ -88,9 +88,9 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
   map: {
-    // width: Dimensions.get("window").width,
+    width: Dimensions.get("window").width,
 
     height: 300,
-    width: 400,
+    //width: 400,
   },
 });
