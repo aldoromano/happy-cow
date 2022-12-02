@@ -4,17 +4,27 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import { useEffect, useState } from "react";
 import restaurants from "./assets/restaurants.json";
 
 // Containers
 import RestaurantsScreen from "./containers/RestaurantsScreen";
+import RestaurantScreen from "./containers/RestaurantScreen";
 import SplashScreen from "./containers/SplashScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
+import FavoritesScreen from "./containers/FavoritesScreen";
+import CarrouselScreen from "./containers/CarrouselScreen";
+
+// Icônes
+import { Ionicons } from "@expo/vector-icons";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+  const Tab = createBottomTabNavigator();
+
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
 
@@ -66,8 +76,91 @@ export default function App() {
             </Stack.Screen>
           </>
         ) : (
-          <Stack.Screen name="Home">
-            {() => <RestaurantsScreen restaurants={restaurants.slice(0, 20)} />}
+          <Stack.Screen name="Tab" options={{ headerShown: false }}>
+            {() => (
+              <Tab.Navigator
+                screenOptions={{
+                  headerShown: false,
+                  tabBarActiveTintColor: "tomato",
+                  tabBarInactiveTintColor: "gray",
+                }}
+              >
+                <Tab.Screen
+                  name="TabHome"
+                  options={{
+                    tabBarLabel: "Home",
+                    tabBarIcon: ({ color, size }) => (
+                      <Ionicons name={"ios-home"} size={size} color={color} />
+                    ),
+                  }}
+                >
+                  {() => (
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="Home"
+                        options={{
+                          title: "Explorer",
+                          headerStyle: { backgroundColor: "red" },
+                          headerTitleStyle: { color: "white" },
+                        }}
+                      >
+                        {() => (
+                          <RestaurantsScreen
+                            restaurants={restaurants.slice(0, 20)}
+                          />
+                        )}
+                      </Stack.Screen>
+
+                      <Stack.Screen
+                        name="Restaurant"
+                        options={{
+                          title: "Restaurant",
+                          headerStyle: { backgroundColor: "orange" },
+                          headerTitleStyle: { color: "white" },
+                        }}
+                      >
+                        {() => <RestaurantScreen />}
+                      </Stack.Screen>
+
+                      <Stack.Screen
+                        name="Carrousel"
+                        options={{
+                          title: "Carrousel",
+                          headerStyle: { backgroundColor: "violet" },
+                          headerTitleStyle: { color: "white" },
+                        }}
+                      >
+                        {() => <CarrouselScreen />}
+                      </Stack.Screen>
+                    </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+                <Tab.Screen
+                  name="TabFavorites"
+                  options={{
+                    tabBarLabel: "Favorites",
+                    tabBarIcon: ({ color, size }) => (
+                      <Ionicons name={"ios-home"} size={size} color={color} />
+                    ),
+                  }}
+                >
+                  {() => (
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="Favorites"
+                        options={{
+                          title: "Favoris",
+                          headerStyle: { backgroundColor: "blue" },
+                          headerTitleStyle: { color: "white" },
+                        }}
+                      >
+                        {() => <FavoritesScreen />}
+                      </Stack.Screen>
+                    </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+              </Tab.Navigator>
+            )}
           </Stack.Screen>
         )}
       </Stack.Navigator>

@@ -38,7 +38,7 @@ export default function SignInScreen({ setToken }) {
       //     }
       //   );
 
-      setToken(1234);
+      setToken("abc");
       //   setId(response.data.id);
     } catch (error) {
       console.log(error.message);

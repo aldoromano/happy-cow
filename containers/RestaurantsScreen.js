@@ -11,6 +11,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import { useNavigation } from "@react-navigation/core";
+
 import { useState, useEffect } from "react";
 import Constants from "expo-constants";
 import { Picker } from "@react-native-picker/picker";
@@ -23,6 +25,7 @@ import MapScreen from "../components/MapScreen";
 
 export default function RestaurantsScreen({ restaurants }) {
   //console.log("Restaurants -> ", restaurants.length);
+  const navigation = useNavigation();
 
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
@@ -45,10 +48,17 @@ export default function RestaurantsScreen({ restaurants }) {
     return (
       <View key={item.placeId} style={styles.lineContainer}>
         {item.thumbnail && (
-          <Image
-            source={{ uri: item.thumbnail }}
-            style={styles.thumbnailContainer}
-          />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() =>
+              navigation.navigate("Restaurant", { id: item.placeId })
+            }
+          >
+            <Image
+              source={{ uri: item.thumbnail }}
+              style={styles.thumbnailContainer}
+            />
+          </TouchableOpacity>
         )}
         <View style={styles.informationContainer}>
           <View style={styles.detailContainer}>
@@ -213,21 +223,30 @@ export default function RestaurantsScreen({ restaurants }) {
         <Picker
           selectedValue={selectedValue}
           // style={{ height: 20, width: 100 }}
+          itemStyle={{ height: 70, backgroundColor: "yellow" }}
           style={styles.picker}
           onValueChange={(itemValue, itemIndex) => {
             setSelectedValue(itemValue);
             setAction({ action: "List", value: itemValue });
           }}
         >
-          <Picker.Item style={{ fontSize: 10 }} label="All" value="All" />
-          <Picker.Item style={{ fontSize: 10 }} label="Vegan" value="Vegan" />
           <Picker.Item
-            style={{ fontSize: 11 }}
+            style={{ fontSize: 11, height: 10 }}
+            label="All"
+            value="All"
+          />
+          <Picker.Item
+            style={{ fontSize: 11, height: 10 }}
+            label="Vegan"
+            value="Vegan"
+          />
+          <Picker.Item
+            style={{ fontSize: 11, height: 10 }}
             label="Veg Store"
             value="Veg Store"
           />
           <Picker.Item
-            style={{ fontSize: 11 }}
+            style={{ fontSize: 11, height: 10 }}
             label="Vegetarian"
             value="Vegetarian"
           />
@@ -333,6 +352,8 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderWidth: 1,
     fontSize: 8,
+    // backgroundColor: "yellow",
+    padding: 0,
   },
 
   lineContainer: {
