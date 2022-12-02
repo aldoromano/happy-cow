@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
 
-  nameContainer: { justifyContent: "flex-start" },
+  nameContainer: { justifyContent: "flex-startcd" },
   whiteText: {
     color: "white",
     fontSize: 12,
