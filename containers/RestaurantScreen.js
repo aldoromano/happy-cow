@@ -10,11 +10,11 @@ import {
 import { useRoute } from "@react-navigation/native";
 import restaurants from "../assets/restaurants.json";
 import Constants from "expo-constants";
-import { useNavigation } from "@react-navigation/core";
+// import { useNavigation } from "@react-navigation/core";
 
 export default function RestaurantScreen() {
   const { params } = useRoute();
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   const restaurant = restaurants.filter((elem) => elem.placeId === params.id);
   // console.log("placeId -> ", params.id, " / ", restaurant[0].thumbnail);
@@ -38,9 +38,9 @@ export default function RestaurantScreen() {
               <View style={styles.restaurantOtherImage2Container}>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate("Carrousel", {
-                      pictures: restaurant[0].pictures,
-                    });
+                    // navigation.navigate("Carrousel", {
+                    //   pictures: restaurant[0].pictures,
+                    // });
                   }}
                 >
                   <Image
