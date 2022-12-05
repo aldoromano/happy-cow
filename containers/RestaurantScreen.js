@@ -24,20 +24,13 @@ export default function RestaurantScreen() {
 
   const restaurant = restaurants.filter((elem) => elem.placeId === params.id);
 
-  // const getStars = (rating) => {
-  //   const num = Math.floor(rating);
-  //   const dec = rating - num;
-  //   let tab = [];
+  /*
+   * Gestion des favoris
+   */
+  const handleFavorite = (action) => {
+    alert("Clic favoris, action >> ", action);
+  };
 
-  //   for (let i = 0; i < num; i++) {
-  //     tab.push(<FontAwesome name="star" size={15} color="orange" />);
-  //   }
-  //   if (dec) {
-  //     tab.push(<FontAwesome name="star-half-full" size={15} color="orange" />);
-  //   }
-
-  //   return tab;
-  // };
   // console.log("placeId -> ", params.id, " / ", params.distance);
   return (
     <View style={styles.container}>
@@ -91,6 +84,15 @@ export default function RestaurantScreen() {
             <View style={styles.nameContainer}>
               <Text style={styles.whiteText}>{restaurant[0].name}</Text>
             </View>
+
+            <TouchableOpacity
+              onPress={() => {
+                handleFavorite("Delete");
+              }}
+            >
+              <FontAwesome name="heart-o" size={24} color="grey" />
+            </TouchableOpacity>
+
             <View>
               <Text style={styles.whiteText}>{restaurant[0].type}</Text>
             </View>
@@ -102,13 +104,28 @@ export default function RestaurantScreen() {
                 {getStars(restaurant[0].rating)}
               </Text>
             </View>
+            <TouchableOpacity
+              style={styles.favoriteContainer}
+              onPress={() => {
+                handleFavorite("Add");
+              }}
+            >
+              <Text style={styles.whiteText}>Ajouter à vos Favoris</Text>
+            </TouchableOpacity>
             <View>
               <Text style={styles.whiteText}>{params.distance}</Text>
             </View>
           </View>
           {/* <Text>Truc</Text> */}
         </View>
-        <View style={styles.mediumContainer}></View>
+        <View style={styles.mediumContainer}>
+          <View style={styles.textMediumContainer}>
+            <Text style={styles.textMedium}>AJOUTER UN AVIS</Text>
+            <Text style={styles.textMedium}>AJOUTER UNE PHOTO</Text>
+            <Text style={styles.textMedium}>APPELER</Text>
+          </View>
+          <Text style={styles.textMedium}>{restaurant[0].description}</Text>
+        </View>
         <View style={styles.mapContainer}>
           <MapScreen restaurants={restaurant}></MapScreen>
         </View>
@@ -130,14 +147,14 @@ const styles = StyleSheet.create({
     height:
       (Dimensions.get("window").height - Constants.statusBarHeight - 49) / 3,
     width: Dimensions.get("window").width,
-    // alignItems: "center",
-    justifyContent: "center",
+    //alignItems: "flex-start",
+    justifyContent: "flex-start",
   },
 
   imagesContainer: {
-    height: "60%",
+    height: "80%",
     width: "100%",
-    backgroundColor: "black",
+    //backgroundColor: "black",
     flexDirection: "row",
   },
 
@@ -183,18 +200,43 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 
-  textContainer: { flexDirection: "row", justifyContent: "space-between" },
+  textContainer: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  favoriteContainer: {
+    borderColor: "orange",
+    borderWidth: 1,
+    backgroundColor: "orange",
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+
   mediumContainer: {
-    backgroundColor: "red",
+    backgroundColor: "#FFFFFF",
     width: Dimensions.get("window").width,
     height:
-      (Dimensions.get("window").height - Constants.statusBarHeight - 49) / 3,
+      (Dimensions.get("window").height - Constants.statusBarHeight - 49) / 4,
   },
+
+  textMediumContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomColor: "grey",
+    borderBottomWidth: 1,
+    padding: 15,
+  },
+
+  textMedium: { padding: 10, fontSize: 12 },
 
   mapContainer: {
     backgroundColor: "yellow",
-    height:
-      (Dimensions.get("window").height - Constants.statusBarHeight - 49) / 3,
+    // height:
+    //   (Dimensions.get("window").height - Constants.statusBarHeight - 49) / 3,
+    height: "100%",
     width: Dimensions.get("window").width,
   },
 });

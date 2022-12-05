@@ -17,6 +17,5 @@ export default function getStars(rating) {
       />
     );
   }
-
   return tab;
 }
