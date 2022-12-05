@@ -28,7 +28,7 @@ export default function RestaurantScreen() {
    * Gestion des favoris
    */
   const handleFavorite = (action) => {
-    alert("Clic favoris, action >> ", action);
+    alert("Clic favoris, action >> " + action);
   };
 
   // console.log("placeId -> ", params.id, " / ", params.distance);
