@@ -17,6 +17,7 @@ import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import FavoritesScreen from "./containers/FavoritesScreen";
 import CarrouselScreen from "./containers/CarrouselScreen";
+import LogoutScreen from "./containers/LogoutScreen";
 
 // Icônes
 import { Ionicons } from "@expo/vector-icons";
@@ -57,6 +58,7 @@ export default function App() {
     }
   }, []);
 
+  console.log("userToken ->> ", userToken);
   if (isLoading === true) {
     // We haven't finished checking for the token yet
     return null;
@@ -135,6 +137,7 @@ export default function App() {
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>
+
                 <Tab.Screen
                   name="TabFavorites"
                   options={{
@@ -155,6 +158,31 @@ export default function App() {
                         }}
                       >
                         {() => <FavoritesScreen />}
+                      </Stack.Screen>
+                    </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+
+                <Tab.Screen
+                  name="tabLogout"
+                  options={{
+                    tabBarLabel: "Logout",
+                    tabBarIcon: ({ color, size }) => (
+                      <Ionicons name={"ios-home"} size={size} color={color} />
+                    ),
+                  }}
+                >
+                  {() => (
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="logout"
+                        options={{
+                          title: "Logout",
+                          headerStyle: { backgroundColor: "blue" },
+                          headerTitleStyle: { color: "white" },
+                        }}
+                      >
+                        {() => <LogoutScreen setToken={setToken} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}

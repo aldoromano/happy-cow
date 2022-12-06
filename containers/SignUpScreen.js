@@ -31,26 +31,21 @@ export default function SignUpScreen({ setToken }) {
     }
 
     try {
-      //   const response = await axios.post(
-      //     "https://express-airbnb-api.herokuapp.com/user/sign_up",
-      //     {
-      //       email: email,
-      //       username: userName,
-      //       password: password,
-      //       description: description,
-      //     }
-      //   );
+      const response = await axios.post("https://localhost:4000/user/sign_up", {
+        email: email,
+        username: userName,
+        password: password,
+        description: description,
+      });
 
-      setToken("1234");
+      setToken(response.token);
       //   setId(response.data._id);
     } catch (error) {
       console.log(error.message);
     }
   };
+
   return (
-    // <View>
-    //   <Text>SIGNUP</Text>
-    // </View>
     <ScrollView>
       <View style={styles.container}>
         <Text style={styles.text}>Email: </Text>

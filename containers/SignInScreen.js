@@ -16,11 +16,7 @@ export default function SignInScreen({ setToken }) {
   const [email, setEmail] = useState("bb@gmail.com");
   const [password, setPassword] = useState("a");
   const [error, setError] = useState("");
-  //   return (
-  //     <View style={styles.container}>
-  //       <Text>SIGNIN</Text>
-  //     </View>
-  //   );
+
   const submit = async () => {
     setError("");
     // FRONT on vérifie que tous les champs soient renseignés
@@ -30,20 +26,19 @@ export default function SignInScreen({ setToken }) {
     }
 
     try {
-      //   const response = await axios.post(
-      //     "https://express-airbnb-api.herokuapp.com/user/log_in",
-      //     {
-      //       email: email,
-      //       password: password,
-      //     }
-      //   );
+      const response = await axios.post("https://127.0.0.1:4000/user/login", {
+        email: email,
+        password: password,
+      });
 
-      setToken("abc");
+      setToken(response.token);
       //   setId(response.data.id);
     } catch (error) {
-      console.log(error.message);
+      console.log("Erreur détectée ->> ", error.message);
     }
   };
+
+  console.log("SignIn :");
   return (
     <ScrollView>
       <View style={styles.container}>
