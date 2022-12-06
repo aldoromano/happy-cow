@@ -31,17 +31,20 @@ export default function SignUpScreen({ setToken }) {
     }
 
     try {
-      const response = await axios.post("https://localhost:4000/user/sign_up", {
-        email: email,
-        username: userName,
-        password: password,
-        description: description,
-      });
-
-      setToken(response.token);
+      const response = await axios.post(
+        "https://bf34-193-252-55-178.eu.ngrok.io/user/signup",
+        {
+          email: email,
+          username: userName,
+          password: password,
+          description: description,
+        }
+      );
+      console.log(response.data);
+      setToken(response.data.token);
       //   setId(response.data._id);
     } catch (error) {
-      console.log(error.message);
+      console.log(error.response.data);
     }
   };
 

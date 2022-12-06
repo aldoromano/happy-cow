@@ -6,33 +6,65 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import restaurants from "../assets/restaurants.json";
 import Constants from "expo-constants";
 import { FontAwesome } from "@expo/vector-icons";
-
+import axios from "axios";
 import * as Location from "expo-location";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 import MapScreen from "../components/MapScreen";
 import getStars from "../components/Stars";
+import { useEffect, useState } from "react";
 
 export default function RestaurantScreen() {
   const { params } = useRoute();
   const navigation = useNavigation();
 
   const restaurant = restaurants.filter((elem) => elem.placeId === params.id);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(false);
   /*
    * Gestion des favoris
    */
-  const handleFavorite = (action) => {
-    alert("Clic favoris, action >> " + action);
+  const handleFavorite = async (action) => {
+    //alert("Clic favoris, action >> " + action);
+
+    try {
+      const response = await axios.post(
+        "https://bf34-193-252-55-178.eu.ngrok.io/user/favorite",
+        { placeId: params.id, token: params.userToken }
+      );
+    } catch (error) {
+      console.log("Erreur détectée ->> ", error.message);
+    }
   };
 
+  useEffect(() => {
+    try {
+      const checkIfFavorite = async () => {
+        console.log("Appel axios ->> ", params.id, " - ", params.userToken);
+        const response = await axios.get(
+          "https://bf34-193-252-55-178.eu.ngrok.io/user/isfavorite",
+          { placeId: params.id, token: params.userToken }
+        );
+        console.log("response ->> ", response.data);
+        setIsFavorite(response.data.existing === "yes" ? true : false);
+      };
+
+      checkIfFavorite();
+      setIsLoading(false);
+    } catch (error) {
+      console.log("Erreur détectée ->> ", error.message);
+    }
+  }, []);
   // console.log("placeId -> ", params.id, " / ", params.distance);
-  return (
+  return isLoading ? (
+    <ActivityIndicator></ActivityIndicator>
+  ) : (
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.restaurantContainer}>
@@ -84,14 +116,15 @@ export default function RestaurantScreen() {
             <View style={styles.nameContainer}>
               <Text style={styles.whiteText}>{restaurant[0].name}</Text>
             </View>
-
-            <TouchableOpacity
-              onPress={() => {
-                handleFavorite("Delete");
-              }}
-            >
-              <FontAwesome name="heart-o" size={24} color="grey" />
-            </TouchableOpacity>
+            {isFavorite ? (
+              <TouchableOpacity
+                onPress={() => {
+                  handleFavorite("Delete");
+                }}
+              >
+                <FontAwesome name="heart-o" size={24} color="grey" />
+              </TouchableOpacity>
+            ) : null}
 
             <View>
               <Text style={styles.whiteText}>{restaurant[0].type}</Text>

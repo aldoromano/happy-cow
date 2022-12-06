@@ -67,7 +67,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {userToken === null ? (
+        {!userToken ? (
           // No token found, user isn't signed in
           <>
             <Stack.Screen name="SignIn">
@@ -109,6 +109,7 @@ export default function App() {
                         {() => (
                           <RestaurantsScreen
                             restaurants={restaurants.slice(0, 100)}
+                            userToken={userToken}
                           />
                         )}
                       </Stack.Screen>

@@ -24,7 +24,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import MapScreen from "../components/MapScreen";
 import getStars from "../components/Stars";
 
-export default function RestaurantsScreen({ restaurants }) {
+export default function RestaurantsScreen({ restaurants, userToken }) {
   //console.log("Restaurants -> ", restaurants.length);
   const navigation = useNavigation();
 
@@ -54,6 +54,7 @@ export default function RestaurantsScreen({ restaurants }) {
             onPress={() =>
               navigation.navigate("Restaurant", {
                 id: item.placeId,
+                userToken: userToken,
                 distance:
                   (
                     getDistance(

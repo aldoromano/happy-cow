@@ -26,12 +26,15 @@ export default function SignInScreen({ setToken }) {
     }
 
     try {
-      const response = await axios.post("https://127.0.0.1:4000/user/login", {
-        email: email,
-        password: password,
-      });
+      const response = await axios.post(
+        "https://bf34-193-252-55-178.eu.ngrok.io/user/login",
+        {
+          email: email,
+          password: password,
+        }
+      );
 
-      setToken(response.token);
+      setToken(response.data.token);
       //   setId(response.data.id);
     } catch (error) {
       console.log("Erreur détectée ->> ", error.message);
