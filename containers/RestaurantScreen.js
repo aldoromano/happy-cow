@@ -27,17 +27,19 @@ export default function RestaurantScreen() {
   const restaurant = restaurants.filter((elem) => elem.placeId === params.id);
   const [isLoading, setIsLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [updateFavorite, setUpdateFavorite] = useState(0);
   /*
    * Gestion des favoris
    */
-  const handleFavorite = async (action) => {
-    //alert("Clic favoris, action >> " + action);
+  const handleFavorite = async () => {
+    // alert("Clic favoris, action >> " + action);
 
     try {
       const response = await axios.post(
         "https://bf34-193-252-55-178.eu.ngrok.io/user/favorite",
         { placeId: params.id, token: params.userToken }
       );
+      setUpdateFavorite(updateFavorite + 1);
     } catch (error) {
       console.log("Erreur détectée ->> ", error.message);
     }
@@ -47,7 +49,7 @@ export default function RestaurantScreen() {
     try {
       const checkIfFavorite = async () => {
         console.log("Appel axios ->> ", params.id, " - ", params.userToken);
-        const response = await axios.get(
+        const response = await axios.post(
           "https://bf34-193-252-55-178.eu.ngrok.io/user/isfavorite",
           { placeId: params.id, token: params.userToken }
         );
@@ -60,7 +62,7 @@ export default function RestaurantScreen() {
     } catch (error) {
       console.log("Erreur détectée ->> ", error.message);
     }
-  }, []);
+  }, [updateFavorite]);
   // console.log("placeId -> ", params.id, " / ", params.distance);
   return isLoading ? (
     <ActivityIndicator></ActivityIndicator>
@@ -119,10 +121,10 @@ export default function RestaurantScreen() {
             {isFavorite ? (
               <TouchableOpacity
                 onPress={() => {
-                  handleFavorite("Delete");
+                  handleFavorite();
                 }}
               >
-                <FontAwesome name="heart-o" size={24} color="grey" />
+                <FontAwesome name="heart" size={24} color="orange" />
               </TouchableOpacity>
             ) : null}
 
@@ -137,14 +139,18 @@ export default function RestaurantScreen() {
                 {getStars(restaurant[0].rating)}
               </Text>
             </View>
-            <TouchableOpacity
-              style={styles.favoriteContainer}
-              onPress={() => {
-                handleFavorite("Add");
-              }}
-            >
-              <Text style={styles.whiteText}>Ajouter à vos Favoris</Text>
-            </TouchableOpacity>
+
+            {isFavorite ? null : (
+              <TouchableOpacity
+                style={styles.favoriteContainer}
+                onPress={() => {
+                  handleFavorite();
+                }}
+              >
+                <Text style={styles.whiteText}>Ajouter à vos Favoris</Text>
+              </TouchableOpacity>
+            )}
+
             <View>
               <Text style={styles.whiteText}>{params.distance}</Text>
             </View>

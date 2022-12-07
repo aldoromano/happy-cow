@@ -59,8 +59,6 @@ export default function MapScreen({ restaurants }) {
           showsUserLocation={true}
         >
           {restaurants.map((restaurant, index) => {
-            console.log("bcl -> ", index);
-
             return (
               <Marker
                 key={restaurant.placeId}

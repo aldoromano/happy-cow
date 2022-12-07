@@ -158,7 +158,7 @@ export default function App() {
                           headerTitleStyle: { color: "white" },
                         }}
                       >
-                        {() => <FavoritesScreen />}
+                        {() => <FavoritesScreen userToken={userToken} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}

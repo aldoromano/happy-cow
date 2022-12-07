@@ -15,7 +15,6 @@ export default function () {
   //   console.log("params -> ", params);
 
   const renderItem = ({ item }) => {
-    console.log("renderItem", item);
     return (
       <View style={styles.imageContainer}>
         <Image source={{ uri: item }} style={styles.imageRestaurant} />
