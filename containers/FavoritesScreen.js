@@ -27,7 +27,8 @@ export default function FavoriteScreen({ userToken }) {
       const loadData = async () => {
         console.log("loadData !");
         const response = await axios.post(
-          "https://bf34-193-252-55-178.eu.ngrok.io/user/favorites",
+          // "https://bf34-193-252-55-178.eu.ngrok.io/user/favorites",
+          "site--happy-cow-backend--7j9qcvd6v4p4.code.run/user/favorites",
           {
             token: userToken,
           }

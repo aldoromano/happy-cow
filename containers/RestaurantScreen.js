@@ -36,7 +36,9 @@ export default function RestaurantScreen() {
 
     try {
       const response = await axios.post(
-        "https://bf34-193-252-55-178.eu.ngrok.io/user/favorite",
+        //"https://bf34-193-252-55-178.eu.ngrok.io/user/favorite",
+
+        "site--happy-cow-backend--7j9qcvd6v4p4.code.run/user/favorite",
         { placeId: params.id, token: params.userToken }
       );
       setUpdateFavorite(updateFavorite + 1);
@@ -50,7 +52,8 @@ export default function RestaurantScreen() {
       const checkIfFavorite = async () => {
         console.log("Appel axios ->> ", params.id, " - ", params.userToken);
         const response = await axios.post(
-          "https://bf34-193-252-55-178.eu.ngrok.io/user/isfavorite",
+          //  "https://bf34-193-252-55-178.eu.ngrok.io/user/isfavorite",
+          "site--happy-cow-backend--7j9qcvd6v4p4.code.run/user/isfavorite",
           { placeId: params.id, token: params.userToken }
         );
         console.log("response ->> ", response.data);

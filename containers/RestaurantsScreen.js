@@ -23,20 +23,25 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 // Composants
 import MapScreen from "../components/MapScreen";
 import getStars from "../components/Stars";
+import axios from "axios";
 
-export default function RestaurantsScreen({ restaurants, userToken }) {
+export default function RestaurantsScreen({ userToken }) {
   //console.log("Restaurants -> ", restaurants.length);
   const navigation = useNavigation();
 
   const [searchText, setSearchText] = useState("");
+  const [type, setType] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
-  const [dataLength, setDataLength] = useState(restaurants.length);
-  const [data, setData] = useState(restaurants);
+
+  //const [dataLength, setDataLength] = useState(restaurants.length);
+  const [dataLength, setDataLength] = useState(0);
+  //const [data, setData] = useState(restaurants);
   const [newRestaurants, setNewRestaurants] = useState([]);
   const [action, setAction] = useState({});
   const [selectedValue, setSelectedValue] = useState("All");
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingBackend, setIsLoadingBackend] = useState(true);
   const [coords, setCoords] = useState();
 
   // Maximum de restaurants par page
@@ -115,73 +120,118 @@ export default function RestaurantsScreen({ restaurants, userToken }) {
   };
 
   useEffect(() => {
-    console.log("useEffect -> ", action);
-    const loadData = () => {
-      if (action.action === "P" && action.value == "-") {
-        const page = pageNumber > 1 ? pageNumber - 1 : pageNumber;
-        setPageNumber(page);
-        setNewRestaurants(
-          data.slice(
-            (page - 1) * MAXROWPAGES,
-            (page - 1) * MAXROWPAGES + MAXROWPAGES
-          )
-        );
-      } else if (action.action === "P" && action.value === "+") {
-        const page =
-          pageNumber * MAXROWPAGES > dataLength ? pageNumber : pageNumber + 1;
-        console.log("page -> ", page, " - ", newRestaurants.length);
-        setPageNumber(page);
-        const tab = data.slice(
-          (page - 1) * MAXROWPAGES,
-          (page - 1) * MAXROWPAGES + MAXROWPAGES
-        );
-        console.log(" Nbre éléments Tab -> ", tab.length);
-        console.log(" slice deb -> ", (page - 1) * MAXROWPAGES);
-        console.log(" slice fin -> ", (page - 1) * MAXROWPAGES + MAXROWPAGES);
-        setNewRestaurants(tab);
-      } else if (action.action === "List" && action.value !== "All") {
-        const data = restaurants.filter((elem) =>
-          elem.type.toLowerCase().includes(action.value.toLowerCase())
-        );
-        console.log("Taille data ->> ", data.length);
-        setData(data);
-        setDataLength(data.length);
-        if (data.length > MAXROWPAGES) {
-          setNewRestaurants(data.slice(0, MAXROWPAGES));
-        } else {
-          setNewRestaurants(data);
-        }
-      } else {
-        if (searchText) {
-          const data = restaurants.filter((elem) =>
-            elem.name.includes(searchText)
-          );
-          setData(data);
-          setDataLength(data.length);
+    console.log("useEffect backend");
 
-          if (data.length > MAXROWPAGES) {
-            setNewRestaurants(data.slice(0, MAXROWPAGES));
-          } else {
-            setNewRestaurants(data);
-          }
-          // setNewRestaurants(
-          //   data.slice(
-          //     (pageNumber - 1) * MAXROWPAGES,
-          //     (pageNumber - 1) * MAXROWPAGES + MAXROWPAGES
-          //   )
-          // );
-        } else {
-          setNewRestaurants(restaurants.slice(0, MAXROWPAGES));
-          setDataLength(restaurants.length);
-          setData(restaurants);
+    try {
+      const loadData = async () => {
+        let type = "";
+        let page = 1;
+        if (action.action === "P" && action.value == "-") {
+          page = pageNumber > 1 ? pageNumber - 1 : 1;
+          setPageNumber(page);
+        } else if (action.action === "P" && action.value === "+") {
+          page =
+            pageNumber * MAXROWPAGES > dataLength ? pageNumber : pageNumber + 1;
+          setPageNumber(page);
+        } else if (selectedValue !== "All") {
+          type = selectedValue;
+          setPageNumber(1);
+        } else if (searchText) {
+          setPageNumber(1);
         }
-      }
-    };
-    loadData();
-  }, [searchText, action]);
+        const response = await axios.get(
+          //"https://bf34-193-252-55-178.eu.ngrok.io/restaurants?page=" +
+          "site--happy-cow-backend--7j9qcvd6v4p4.code.run/restaurants?page=" +
+            page +
+            "&limit=" +
+            MAXROWPAGES +
+            "&type=" +
+            selectedValue +
+            "&name=" +
+            searchText
+        );
+
+        console.log(
+          "response.data : ",
+          response.data.length,
+          " - ",
+          response.data.data.length
+        );
+        setDataLength(response.data.length);
+        setNewRestaurants(response.data.data);
+      };
+
+      loadData();
+      setIsLoadingBackend(false);
+    } catch (error) {
+      console.log("Erreur détectée : ", error.message);
+    }
+  }, [searchText, action, selectedValue]);
+
+  // useEffect(() => {
+  //   console.log("useEffect -> ", action);
+  //   const loadData = async () => {
+  //     const type = "";
+  //     if (action.action === "P" && action.value == "-") {
+  //       const page = pageNumber > 1 ? pageNumber - 1 : pageNumber;
+  //       setPageNumber(page);
+  //       setNewRestaurants(
+  //         data.slice(
+  //           (page - 1) * MAXROWPAGES,
+  //           (page - 1) * MAXROWPAGES + MAXROWPAGES
+  //         )
+  //       );
+  //     } else if (action.action === "P" && action.value === "+") {
+  //       const page =
+  //         pageNumber * MAXROWPAGES > dataLength ? pageNumber : pageNumber + 1;
+
+  //       console.log("page -> ", page, " - ", newRestaurants.length);
+  //       setPageNumber(page);
+  //       const tab = data.slice(
+  //         (page - 1) * MAXROWPAGES,
+  //         (page - 1) * MAXROWPAGES + MAXROWPAGES
+  //       );
+  //       console.log(" Nbre éléments Tab -> ", tab.length);
+  //       console.log(" slice deb -> ", (page - 1) * MAXROWPAGES);
+  //       console.log(" slice fin -> ", (page - 1) * MAXROWPAGES + MAXROWPAGES);
+  //       setNewRestaurants(tab);
+  //     } else if (action.action === "List" && action.value !== "All") {
+  //       type = action.value;
+  //       const data = restaurants.filter((elem) =>
+  //         elem.type.toLowerCase().includes(action.value.toLowerCase())
+  //       );
+  //       console.log("Taille data ->> ", data.length);
+  //       setData(data);
+  //       setDataLength(data.length);
+  //       if (data.length > MAXROWPAGES) {
+  //         setNewRestaurants(data.slice(0, MAXROWPAGES));
+  //       } else {
+  //         setNewRestaurants(data);
+  //       }
+  //     } else {
+  //       if (searchText) {
+  //         const data = restaurants.filter((elem) =>
+  //           elem.name.includes(searchText)
+  //         );
+  //         setData(data);
+  //         setDataLength(data.length);
+  //         if (data.length > MAXROWPAGES) {
+  //           setNewRestaurants(data.slice(0, MAXROWPAGES));
+  //         } else {
+  //           setNewRestaurants(data);
+  //         }
+  //       } else {
+  //         setNewRestaurants(restaurants.slice(0, MAXROWPAGES));
+  //         setDataLength(restaurants.length);
+  //         setData(restaurants);
+  //       }
+  //     }
+  //   };
+  //   loadData();
+  // }, [searchText, action]);
 
   useEffect(() => {
-    console.log("Use effect bis !");
+    console.log("Use effect permissions !");
     const askPermission = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
 
@@ -205,7 +255,7 @@ export default function RestaurantsScreen({ restaurants, userToken }) {
   }, []);
   //console.log("newR -> ", newRestaurants.length);
 
-  return isLoading ? (
+  return isLoading || isLoadingBackend ? (
     <ActivityIndicator size="large" color="purple" style={{ marginTop: 100 }} />
   ) : error ? (
     <Text>Permission refusée</Text>
@@ -241,11 +291,11 @@ export default function RestaurantsScreen({ restaurants, userToken }) {
         <Picker
           selectedValue={selectedValue}
           // style={{ height: 20, width: 100 }}
-          itemStyle={{ height: 70, backgroundColor: "yellow" }}
+          //itemStyle={{ height: 70, backgroundColor: "yellow" }}
           style={styles.picker}
           onValueChange={(itemValue, itemIndex) => {
             setSelectedValue(itemValue);
-            setAction({ action: "List", value: itemValue });
+            //setAction({ action: "List", value: itemValue });
           }}
         >
           <Picker.Item
@@ -365,7 +415,7 @@ const styles = StyleSheet.create({
   },
 
   picker: {
-    height: 10,
+    height: 20,
     width: 100,
     borderColor: "red",
     borderWidth: 1,

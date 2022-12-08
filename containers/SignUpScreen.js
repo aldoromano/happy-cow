@@ -32,7 +32,8 @@ export default function SignUpScreen({ setToken }) {
 
     try {
       const response = await axios.post(
-        "https://bf34-193-252-55-178.eu.ngrok.io/user/signup",
+        //"https://bf34-193-252-55-178.eu.ngrok.io/user/signup",
+        "site--happy-cow-backend--7j9qcvd6v4p4.code.run/user/signup",
         {
           email: email,
           username: userName,

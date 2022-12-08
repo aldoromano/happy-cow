@@ -13,8 +13,8 @@ import { useNavigation } from "@react-navigation/core";
 export default function SignInScreen({ setToken }) {
   const navigation = useNavigation();
 
-  const [email, setEmail] = useState("bb@gmail.com");
-  const [password, setPassword] = useState("a");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const submit = async () => {
@@ -27,7 +27,8 @@ export default function SignInScreen({ setToken }) {
 
     try {
       const response = await axios.post(
-        "https://bf34-193-252-55-178.eu.ngrok.io/user/login",
+        // "https://bf34-193-252-55-178.eu.ngrok.io/user/login",
+        "https://site--happy-cow-backend--7j9qcvd6v4p4.code.run/user/login",
         {
           email: email,
           password: password,

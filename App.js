@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { useEffect, useState } from "react";
-import restaurants from "./assets/restaurants.json";
+//import restaurants from "./assets/restaurants.json";
 
 // Containers
 import RestaurantsScreen from "./containers/RestaurantsScreen";
@@ -108,7 +108,7 @@ export default function App() {
                       >
                         {() => (
                           <RestaurantsScreen
-                            restaurants={restaurants.slice(0, 100)}
+                            //restaurants={restaurants.slice(0, 100)}
                             userToken={userToken}
                           />
                         )}
