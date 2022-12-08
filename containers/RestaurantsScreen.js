@@ -392,15 +392,15 @@ const styles = StyleSheet.create({
 
   descriptionContainer: {
     width: Dimensions.get("window").width - 120,
-    borderWidth: 1,
-    borderColor: "red",
+    //borderWidth: 1,
+    //borderColor: "red",
   },
 
   informationContainer: {
     width: Dimensions.get("window").width - 120,
     justifyContent: "space-between",
-    borderWidth: 1,
-    borderColor: "blue",
+    //borderWidth: 1,
+    //borderColor: "blue",
   },
 
   detailContainer: {
@@ -409,8 +409,8 @@ const styles = StyleSheet.create({
 
   textContainer: {
     width: Dimensions.get("window").width - 200,
-    borderColor: "black",
-    borderWidth: 1,
+    //borderColor: "black",
+    //borderWidth: 1,
   },
 
   textRestaurant: {

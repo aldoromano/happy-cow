@@ -5,37 +5,55 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Image,
 } from "react-native";
 import { useState, useEffect } from "react";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import {
+  useRoute,
+  useNavigation,
+  useIsFocused,
+} from "@react-navigation/native";
 import Constants from "expo-constants";
 
 import axios from "axios";
 
 export default function FavoriteScreen({ userToken }) {
-  console.log("FavoriteScreen ->> ", userToken);
+  const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    console.log("useEffect Favorites ->> ", userToken);
     try {
       const loadData = async () => {
-        const response = await axios.get("/user/favorites?token=" + userToken);
+        console.log("loadData !");
+        const response = await axios.post(
+          "https://bf34-193-252-55-178.eu.ngrok.io/user/favorites",
+          {
+            token: userToken,
+          }
+        );
+        console.log("Réponse : ", response.data);
         setData(response.data);
+        setIsLoading(false);
       };
 
       loadData();
-      setIsLoading(false);
     } catch (error) {
       console.log("Erreur détectée ->> ", error.message);
     }
-  }, []);
+  }, [isFocused]);
 
-  const renderItem = (item) => {
-    <View>
-      <Text>{item.name}</Text>
-    </View>;
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.imageContainer}>
+        <Image
+          source={{ uri: item.thumbnail }}
+          style={styles.imageRestaurant}
+        />
+        <Text style={styles.textName}>{item.name}</Text>
+        <Text style={styles.textAddress}>{item.address}</Text>
+      </View>
+    );
   };
 
   return isLoading ? (
@@ -74,6 +92,18 @@ const styles = StyleSheet.create({
   imageRestaurant: {
     height:
       (Dimensions.get("window").height - Constants.statusBarHeight - 75) / 5,
+    width: Dimensions.get("window").width / 3,
+    borderRadius: 10,
+  },
+
+  textName: {
+    fontWeight: "bold",
+    fontSize: 12,
+    width: Dimensions.get("window").width / 3,
+  },
+
+  textAddress: {
+    fontSize: 10,
     width: Dimensions.get("window").width / 3,
   },
 });

@@ -118,7 +118,7 @@ export default function App() {
                         name="Restaurant"
                         options={{
                           title: "Restaurant",
-                          headerStyle: { backgroundColor: "orange" },
+                          headerStyle: { backgroundColor: "#1FAE9E" },
                           headerTitleStyle: { color: "white" },
                         }}
                       >
